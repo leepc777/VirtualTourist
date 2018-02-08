@@ -22,6 +22,7 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <gestureRecognizers/>
                                 <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="fvI-a7-rKQ"/>
                                     <outletCollection property="gestureRecognizers" destination="W3i-C4-twI" appends="YES" id="MAg-XN-EVu"/>
                                 </connections>
                             </mapView>
@@ -41,7 +42,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="W3i-C4-twI">
+                <pongPressGestureRecognizer allowableMovement="5" minimumPressDuration="0.5" id="W3i-C4-twI">
                     <connections>
                         <action selector="addPin:" destination="BYZ-38-t0r" id="nBW-lV-bfo"/>
                     </connections>

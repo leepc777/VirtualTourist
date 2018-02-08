@@ -12,6 +12,7 @@
 		22532F77202BC42C0035A806 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22532F75202BC42C0035A806 /* Main.storyboard */; };
 		22532F79202BC42C0035A806 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22532F78202BC42C0035A806 /* Assets.xcassets */; };
 		22532F7C202BC42C0035A806 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22532F7A202BC42C0035A806 /* LaunchScreen.storyboard */; };
+		22532F85202BE6150035A806 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 22532F83202BE6150035A806 /* Model.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		22532F78202BC42C0035A806 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		22532F7B202BC42C0035A806 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		22532F7D202BC42C0035A806 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		22532F84202BE6150035A806 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,12 +58,21 @@
 			children = (
 				22532F71202BC42C0035A806 /* AppDelegate.swift */,
 				22532F73202BC42C0035A806 /* ViewController.swift */,
+				22532F86202BE61E0035A806 /* Model */,
 				22532F75202BC42C0035A806 /* Main.storyboard */,
 				22532F78202BC42C0035A806 /* Assets.xcassets */,
 				22532F7A202BC42C0035A806 /* LaunchScreen.storyboard */,
 				22532F7D202BC42C0035A806 /* Info.plist */,
 			);
 			path = VirtualTourist;
+			sourceTree = "<group>";
+		};
+		22532F86202BE61E0035A806 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				22532F83202BE6150035A806 /* Model.xcdatamodeld */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,6 +149,7 @@
 			files = (
 				22532F74202BC42C0035A806 /* ViewController.swift in Sources */,
 				22532F72202BC42C0035A806 /* AppDelegate.swift in Sources */,
+				22532F85202BE6150035A806 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +334,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		22532F83202BE6150035A806 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				22532F84202BE6150035A806 /* Model.xcdatamodel */,
+			);
+			currentVersion = 22532F84202BE6150035A806 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 22532F66202BC42C0035A806 /* Project object */;
 }
