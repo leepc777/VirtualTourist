@@ -28,39 +28,57 @@ class CollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "collectionCell")
+//        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "collectionCell")
         
         let imageURL = URL(string: "https://scontent.fsnc1-1.fna.fbcdn.net/v/t31.0-8/27368245_10156168543027002_2810235546452527170_o.jpg?oh=9be751f2dfb484e7cc89af4edfc15bed&oe=5B1C61A0")
         // create network request
-//        let task = URLSession.shared.dataTask(with: imageURL!) { (data, response, error) in
+                let task = URLSession.shared.dataTask(with: imageURL!) { (data, response, error) in
+        
+                    if error == nil {
+                        
+                        //store to test Array
+                        self.testArray.append(data!)
+                        self.testArray.append(data!)
+                        self.testArray.append(data!)
+                        self.testArray.append(data!)
+                        
+                        // store returned data to Photo entity
+                        let newPhoto = Photo(context: self.context)
+                        newPhoto.image = data!
+                        newPhoto.title = "test"
+                        newPhoto.parentPin = self.selectedPin
+                        self.photoArray.append(newPhoto)
+                        
+                        print("^^^^^^  successfully dataTask to download image in ViewDidLoad")
+                        
+                        // update UI on a main thread
+                        
+                    } else {
+                        print(error!)
+                    }
+                }
+        
+                // start network request
+                task.resume()
+        
+//        let newImageData = UIImageJPEGRepresentation(UIImage(named:"finn")!, 1)
 //
-//            if error == nil {
-//
-//                // create image
-////                let downloadedImage = UIImage(data: data!)
-//
-//                self.testArray.append(data!)
-//                self.testArray.append(data!)
-//                self.testArray.append(data!)
-//                self.testArray.append(data!)
-//
-//                // update UI on a main thread
-//
-//            } else {
-//                print(error!)
-//            }
-//        }
-//
-//        // start network request
-//        task.resume()
+//        testArray.append(newImageData!)
+//        testArray.append(newImageData!)
+//        testArray.append(newImageData!)
+//        testArray.append(newImageData!)
+        
+//        var newPhoto = Photo()
+//        newPhoto.image = newImageData
+//        newPhoto.title = "test"
+//        newPhoto.parentPin = selectedPin
 
-        let newImageData = UIImageJPEGRepresentation(UIImage(named:"finn")!, 1)
+//        photoArray.append(newPhoto)
+//        photoArray.append(newPhoto)
+//        photoArray.append(newPhoto)
+//        photoArray.append(newPhoto)
 
-                        self.testArray.append(newImageData!)
-                        self.testArray.append(newImageData!)
-                        self.testArray.append(newImageData!)
-                        self.testArray.append(newImageData!)
-
+        
     }
 
 
@@ -72,13 +90,18 @@ class CollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print("%%%% testArray count is : \(testArray.count)")
-        return testArray.count
+//        return testArray.count
+        return photoArray.count
         
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewCell", for: indexPath) as! CollectionViewCell
-        cell.imageView.image = UIImage(named: "finn")
+//        cell.imageView.image = UIImage(named: "finn") //finn is local image
+//        cell.imageView.image = UIImage(data: testArray[indexPath.row]) //read from testArray
+        cell.imageView.image = UIImage(data: photoArray[indexPath.row].image!)
+
+        
 //        cell.imageView.image = UIImage(data: testArray[indexPath.row])
 //        let photo = photoArray[indexPath.row]
 //        cell.imageView.image = UIImage(data: photo.image!)
