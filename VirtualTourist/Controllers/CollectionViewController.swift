@@ -5,7 +5,7 @@
 //  Created by Patrick on 2/8/18.
 //  Copyright © 2018 patrick. All rights reserved.
 //
-
+import Foundation
 import UIKit
 import CoreData
 
@@ -15,43 +15,73 @@ class CollectionViewController: UICollectionViewController {
 
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var photoArray = [Photo]()
+    var testArray = [Data]()
     var selectedPin : Pin? {
         didSet {
             loadPhotos()
             print("$$$ Coollection get the selectedPin as \(self.selectedPin)")
-            getImage()
+//            getImage()
+            
+            
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "collectionCell")
+        
+        let imageURL = URL(string: "https://scontent.fsnc1-1.fna.fbcdn.net/v/t31.0-8/27368245_10156168543027002_2810235546452527170_o.jpg?oh=9be751f2dfb484e7cc89af4edfc15bed&oe=5B1C61A0")
+        // create network request
+//        let task = URLSession.shared.dataTask(with: imageURL!) { (data, response, error) in
+//
+//            if error == nil {
+//
+//                // create image
+////                let downloadedImage = UIImage(data: data!)
+//
+//                self.testArray.append(data!)
+//                self.testArray.append(data!)
+//                self.testArray.append(data!)
+//                self.testArray.append(data!)
+//
+//                // update UI on a main thread
+//
+//            } else {
+//                print(error!)
+//            }
+//        }
+//
+//        // start network request
+//        task.resume()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+        let newImageData = UIImageJPEGRepresentation(UIImage(named:"finn")!, 1)
 
-        // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+                        self.testArray.append(newImageData!)
+                        self.testArray.append(newImageData!)
+                        self.testArray.append(newImageData!)
+                        self.testArray.append(newImageData!)
 
-        // Do any additional setup after loading the view.
     }
 
 
  
 
-    // MARK: UICollectionViewDataSource
+    // MARK: Collection View Data Source , UICollectionViewDataSource
 
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        return photoArray.count
+        print("%%%% testArray count is : \(testArray.count)")
+        return testArray.count
         
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CollectionCell
-        let photo = photoArray[indexPath.row]
-        cell.imageView.image = UIImage(data: photo.image!)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewCell", for: indexPath) as! CollectionViewCell
+        cell.imageView.image = UIImage(named: "finn")
+//        cell.imageView.image = UIImage(data: testArray[indexPath.row])
+//        let photo = photoArray[indexPath.row]
+//        cell.imageView.image = UIImage(data: photo.image!)
         
         return cell
     }
@@ -116,21 +146,58 @@ extension CollectionViewController {
         return components.url!
     }
     
-    func getImage() {
+    func getImage()  {
         
-        //        let imageURL = URL(string: "https://farm5.staticflickr.com//4567//38084351084_c82a317880.jpg")!
+        let imageURL = URL(string: "https://farm5.staticflickr.com//4567//38084351084_c82a317880.jpg")!
         
-        let imageURL = URL(string: "https://scontent.fsnc1-1.fna.fbcdn.net/v/t31.0-8/27368245_10156168543027002_2810235546452527170_o.jpg?oh=9be751f2dfb484e7cc89af4edfc15bed&oe=5B1C61A0")!
+        //        let imageURL = URL(string: "https://scontent.fsnc1-1.fna.fbcdn.net/v/t31.0-8/27368245_10156168543027002_2810235546452527170_o.jpg?oh=9be751f2dfb484e7cc89af4edfc15bed&oe=5B1C61A0")!
         
-        if let imageData = try? Data(contentsOf: imageURL){
-            
-            for index in 1...3 {
-                photoArray[index].image = imageData
+        let task = URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
+            if error == nil {
+                //                performUIUpdatesOnMain {
+                //                    self.imageView.image = UIImage(data: datax)
+                //                }
+                
+//                    let tempPhoto = Photo()
+//                    tempPhoto.parentPin = self.selectedPin
+//                    tempPhoto.image = data
+//                    tempPhoto.title = "test"
+//                    print("$$$  here is the tempPhoto : \(tempPhoto)")
+//                    self.photoArray.append(tempPhoto)
+
+                
+                // create image
+                let downloadedImage = UIImage(data: data!)
+
+                
+            } else {
+                print("$$$ fail to access URL : \(error)")
             }
-            
-            //            self.tempImageView.image = UIImage(data: imageData)
-            
         }
+        task.resume()
+        
+        print("!!!!   getImage got called")
+        
+//        if let imageData = try? Data(contentsOf: imageURL){
+//
+//
+//
+//            print("$$$$ inside for loop")
+//            for i in 0...1 {
+//                let tempPhoto = Photo()
+//                tempPhoto.parentPin = selectedPin
+//                tempPhoto.image = imageData
+//                tempPhoto.title = "test"
+//                print("$$$  here is the tempPhoto : \(tempPhoto)")
+//                photoArray.append(tempPhoto)
+//            }
+//
+//        }
+//        else {
+//            print("failed to load image to photArray")
+//        }
+        
+        
     }
 }
 

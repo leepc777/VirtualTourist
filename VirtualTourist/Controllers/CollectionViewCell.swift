@@ -1,16 +1,15 @@
 //
-//  CollectionCell.swift
+//  CollectionViewCell.swift
 //  VirtualTourist
 //
-//  Created by Patrick on 2/8/18.
+//  Created by Patrick on 2/9/18.
 //  Copyright © 2018 patrick. All rights reserved.
 //
 
 import UIKit
 
-class CollectionCell: UICollectionViewCell {
+class CollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
-    
     
 }
