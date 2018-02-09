@@ -16,9 +16,9 @@ class ViewController: UIViewController {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var pinArray = [Pin]()
 
-    var delelat : Double!
-    var delelon : Double!
-
+    var selectedlat : Double!
+    var selectedlon : Double!
+    var selectedPin = Pin()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,8 +40,12 @@ class ViewController: UIViewController {
         print("&&& where is our data",FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
 
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        savePins() // this will store context back to store
+    }
 
-
+    //MARK: - Add new Pin by long Press Gesture
     @IBAction func addPin(_ sender: UILongPressGestureRecognizer) {
         
         //        let span:MKCoordinateSpan = MKCoordinateSpanMake(0.1, 0.1)
@@ -66,7 +70,7 @@ class ViewController: UIViewController {
             
             print("long press began")
             
-            // add new pin to Context and locationArray
+            // add new Pin to Context and locationArray
             let newPin = Pin(context: self.context)
             newPin.latitude = location.latitude
             newPin.longitude = location.longitude
@@ -124,12 +128,16 @@ class ViewController: UIViewController {
     }
     
 
+    //MARK: -- Deleate Pins from context and pinArray
     func deletePin (lat:Double,lon:Double) {
         
         for pin in pinArray {
             if pin.latitude == lat && pin.longitude == lon {
+                
+                print("####  find the mached Pin in pinArray")
                 context.delete(pin)
                 loadPins()
+                break
             } else {
                 print("$$$ failed to dele Pin in func deletePin")
             }
@@ -137,8 +145,27 @@ class ViewController: UIViewController {
         
     }
     
+    //MARK: - find Pin. find and read out the Pin object from pinArray based on Lat&Lon
+    func findPin (lat:Double,lon:Double) -> Pin {
+        
+        var matchedPin = Pin()
+        for pin in pinArray {
+            if pin.latitude == lat && pin.longitude == lon {
+                matchedPin = pin
+                print("####  find the mached Pin in pinArray")
+                break
+            } else {
+                print("$$$ No match Pin in the current pinArray")
+            }
+        }
+        
+        return matchedPin
+
+    }
+    
 }
 
+//MARK: - Map delegation. Optional delegate methods
 extension ViewController : MKMapViewDelegate {
     
     // MARK: Wire a button to the pin to bring up confirmation window
@@ -163,20 +190,23 @@ extension ViewController : MKMapViewDelegate {
         return pinView
     }
 
+    // Right and Left actions after tapping the Pin
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         print("&&&   mapView annotationView view got called")
         let annotation = view.annotation
         
         if control == view.rightCalloutAccessoryView {
             print("$$$   control is at right")
-            
+            self.selectedPin = findPin(lat: (annotation?.coordinate.latitude)!, lon: (annotation?.coordinate.longitude)!)
+            performSegue(withIdentifier: "goToPhotos", sender: self)
+
             
                 }
         if control == view.leftCalloutAccessoryView {
             print("$$$   control is at left")
             self.updateAlert(title: "Update", message: "OK to Delete ?")
-            delelat = annotation?.coordinate.latitude
-            delelon = annotation?.coordinate.longitude
+            selectedlat = annotation?.coordinate.latitude
+            selectedlon = annotation?.coordinate.longitude
 
 //            deletePin(lat: (view.annotation?.coordinate.latitude)!, lon: (view.annotation?.coordinate.longitude)!)
             
@@ -184,6 +214,14 @@ extension ViewController : MKMapViewDelegate {
         }
         
     }
+    
+    //MARK: - Prepare Data for Segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let nextVC = segue.destination as! CollectionViewController
+        nextVC.selectedPin = self.selectedPin
+    }
+
+    
     
     func updateAlert (title:String,message:String) {
     
@@ -196,7 +234,7 @@ extension ViewController : MKMapViewDelegate {
 
         //Delete Button
         let deleAction = UIAlertAction(title: "Delete", style: .default) { (action) in
-            self.deletePin(lat: self.delelat, lon: self.delelon)
+            self.deletePin(lat: self.selectedlat, lon: self.selectedlon)
             print("you just delete it !!!!!!!!!!!!!!!")
         }
         alert.addAction(deleAction)
@@ -205,3 +243,5 @@ extension ViewController : MKMapViewDelegate {
     }
     
 }
+
+
