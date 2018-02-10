@@ -137,7 +137,7 @@ class ViewController: UIViewController {
                 print("####  find the mached Pin in pinArray")
                 context.delete(pin)
                 loadPins()
-                break
+                break //break the loop after a hit
             } else {
                 print("$$$ failed to dele Pin in func deletePin")
             }

@@ -28,10 +28,26 @@ class CollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navigationItem.rightBarButtonItem = editButtonItem
 //        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "collectionCell")
         
         let imageURL = URL(string: "https://scontent.fsnc1-1.fna.fbcdn.net/v/t31.0-8/27368245_10156168543027002_2810235546452527170_o.jpg?oh=9be751f2dfb484e7cc89af4edfc15bed&oe=5B1C61A0")
         // create network request
+        
+        if let data = try? Data(contentsOf: imageURL!) {
+
+            // store returned data to Photo entity
+            let newPhoto = Photo(context: self.context)
+            newPhoto.image = data
+            newPhoto.title = "test"
+            newPhoto.parentPin = self.selectedPin
+            self.photoArray.append(newPhoto)
+            print("$$$ loading data from external URL in viewDidLoad")
+
+        }
+        
+        /*
                 let task = URLSession.shared.dataTask(with: imageURL!) { (data, response, error) in
         
                     if error == nil {
@@ -58,8 +74,8 @@ class CollectionViewController: UICollectionViewController {
                     }
                 }
         
-                // start network request
                 task.resume()
+    */
         
 //        let newImageData = UIImageJPEGRepresentation(UIImage(named:"finn")!, 1)
 //
@@ -78,7 +94,10 @@ class CollectionViewController: UICollectionViewController {
 //        photoArray.append(newPhoto)
 //        photoArray.append(newPhoto)
 
-        
+
+ 
+ 
+print("!!!!! ViewDidLoad compelted")
     }
 
 
@@ -107,6 +126,27 @@ class CollectionViewController: UICollectionViewController {
 //        cell.imageView.image = UIImage(data: photo.image!)
         
         return cell
+    }
+
+    
+    
+    //MARK: - delete collection cell
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        print("#### setEditing was called")
+
+        if editing == true {
+            print("#### editing is true. setEditing was called")
+        }
+        
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if isEditing {
+        context.delete(photoArray[indexPath.row])
+        photoArray.remove(at: indexPath.row)
+        collectionView.deleteItems(at: [indexPath])
+        }
     }
 
     
@@ -223,4 +263,5 @@ extension CollectionViewController {
         
     }
 }
+
 
