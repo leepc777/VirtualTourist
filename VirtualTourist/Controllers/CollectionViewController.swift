@@ -16,10 +16,13 @@ class CollectionViewController: UICollectionViewController {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var photoArray = [Photo]()
     var testArray = [Data]()
-    var selectedPin : Pin? {
+    var urlArray = [PhotoURL]()
+    var selectedPin : Pin! {
         didSet {
+            urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
             loadPhotos()
-            print("$$$ Coollection get the selectedPin as \(self.selectedPin)")
+            print("$$$$$$$$$$   Collection get the selectedPin as \(self.selectedPin)")
+            print("$$$$ the array storing all ID and URLs for every photos from Flickr \(urlArray) ")
 //            getImage()
             
             
@@ -37,10 +40,10 @@ class CollectionViewController: UICollectionViewController {
         
         if let data = try? Data(contentsOf: imageURL!) {
 
-            // store returned data to Photo entity
+            // store returned Image data to Photo entity
             let newPhoto = Photo(context: self.context)
             newPhoto.image = data
-            newPhoto.title = "test"
+            newPhoto.id = "test"
             newPhoto.parentPin = self.selectedPin
             self.photoArray.append(newPhoto)
             print("$$$ loading data from external URL in viewDidLoad")
