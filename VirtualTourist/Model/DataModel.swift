@@ -103,18 +103,6 @@ class PhotoLib {
         }
         return results
         
-//        for result in json["results"].arrayValue {
-//
-//            let title = result["title"].stringValue
-//            let body = result["body"].stringValue
-//            let sigs = result["signatureCount"].stringValue
-//            let obj = ["title": title,"body": body,"sigs": sigs]
-        
-            
-//            petitions.append(obj)
-            
-//        }
-//        tableView.reloadData()
     }
 
     
@@ -132,5 +120,14 @@ class PhotoLib {
         return parsedResult
     }
 
-
+    static func getDataFromURL(url:URL) -> Data{
+        var returnData = Data()
+        if let data = try? Data(contentsOf: url) {
+            
+            returnData = data
+            //            print("$$$ loading data from external URL and store it to photoArray and Context")
+            
+        }
+        return returnData
+    }
 }

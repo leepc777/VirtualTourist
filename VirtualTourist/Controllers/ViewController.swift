@@ -49,15 +49,6 @@ class ViewController: UIViewController {
     //MARK: - Add new Pin by long Press Gesture
     @IBAction func addPin(_ sender: UILongPressGestureRecognizer) {
         
-        //        let span:MKCoordinateSpan = MKCoordinateSpanMake(0.1, 0.1)
-        
-        //        let location:CLLocationCoordinate2D = CLLocationCoordinate2DMake(37.760122, -122.468158)
-        
-        //        let region:MKCoordinateRegion = MKCoordinateRegionMake(location, span)
-        //        map.setRegion(region, animated: true)
-        
-        
-        
         if sender.state == .began {
             
             let locationCGP = sender.location(in: self.map)
@@ -65,8 +56,8 @@ class ViewController: UIViewController {
             
             let annotation = MKPointAnnotation()
             annotation.coordinate = location
-            annotation.title = "tap right to add photos"
-            annotation.subtitle = " tap left to delete"
+            annotation.title = ""
+            annotation.subtitle = ""
             map.addAnnotation(annotation)
             
             print("long press began")
@@ -119,8 +110,8 @@ class ViewController: UIViewController {
             annotation.coordinate.latitude = pin.latitude
             annotation.coordinate.longitude = pin.longitude
 //            annotation.coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
-            annotation.title = "tap right to add photos"
-            annotation.subtitle = " tap left to delete"
+            annotation.title = " "
+            annotation.subtitle = " "
             map.addAnnotation(annotation)
 
         }
@@ -196,25 +187,15 @@ extension ViewController : MKMapViewDelegate {
         print("&&&   mapView annotationView view got called")
         let annotation = view.annotation
         
+//        if control == view.detailCalloutAccessoryView {
+//            print("&&&&& you tapped pin")
+//        performSegue(withIdentifier: "goToPhotos", sender: self)
+//        }
         if control == view.rightCalloutAccessoryView {
             print("$$$   control is at right")
             self.selectedPin = findPin(lat: (annotation?.coordinate.latitude)!, lon: (annotation?.coordinate.longitude)!)
             
-            //set up indicator
-////            let activityIndicator = UIActivityIndicatorView()
-////            activityIndicator.center = self.view.center
-//            activityIndicator.center = mapView.center
-//
-//            activityIndicator.hidesWhenStopped = true
-//            activityIndicator.activityIndicatorViewStyle = .gray
-//            view.addSubview(activityIndicator)
-//            activityIndicator.startAnimating()
-//            UIApplication.shared.beginIgnoringInteractionEvents()
-
             performSegue(withIdentifier: "goToPhotos", sender: self)
-
-//            activityIndicator.stopAnimating() //stop indicator
-//            UIApplication.shared.endIgnoringInteractionEvents()
 
                 }
         if control == view.leftCalloutAccessoryView {

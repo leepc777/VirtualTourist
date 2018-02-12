@@ -9,13 +9,12 @@ import Foundation
 import UIKit
 import CoreData
 
-//private let reuseIdentifier = "collectionCell"
 
 class CollectionViewController: UICollectionViewController {
 
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var photoArray = [Photo]()
-    var urlArray : [PhotoURL]! // store the iD/URL of photos retured by Flickr.
+    var urlArray : [PhotoURL]!
     let activityIndicator = UIActivityIndicatorView()
 
     var selectedPin : Pin! {
@@ -29,10 +28,26 @@ class CollectionViewController: UICollectionViewController {
         static let numberOfItemsPerRow: CGFloat = 3.0
     }
 
+    
+    @objc func didTapSearchButton(sender: AnyObject){
+
+        collectionView?.reloadData()
+        print("$$$$$$$$$ search button got tapped")
+    }
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.rightBarButtonItem = editButtonItem
+        
+//        navigationItem.rightBarButtonItems = [editButtonItem,editButtonItem]
+        
+        let searchImage = UIImage(named: "search")!
+        
+        let searchButton = UIBarButtonItem(image: searchImage,  style: .plain, target: self, action: #selector(didTapSearchButton))
+        
+        navigationItem.rightBarButtonItems = [searchButton, editButtonItem]
+        
         
         // change the layout of the colleciton view
         let collectionViewWidth = collectionView?.frame.width
@@ -58,43 +73,31 @@ class CollectionViewController: UICollectionViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         
-        loadPhotos()
-        print("$$$$$$$$$$   Collection get the selectedPin as \(self.selectedPin)")
-        print("$$$$ the array storing all ID and URLs for every photos from Flickr \(urlArray) ")
-        //            getImage()
         
+        // Fetching Photos from Store to context and PhotoArray.
+        loadPhotos()
+//        print("$$$$$$$$$$   Collection get the selectedPin as \(self.selectedPin)")
+//        print("$$$$ the array storing all ID and URLs for every photos from Flickr \(urlArray) ")
+        
+        
+        // Only download photos from Flikr when NO photos in local Core Data
         if photoArray.count == 0 {
             print("!!!!!!no photos in Context for this Pin, getting some PHOTOS !!!!!!!!! ")
             getImgsFromURLs()
         } else {
-            
             print("!!!!!!there are some photos at this Pin already!!!!!! !!!!! no need to download more unless you delete some")
-            
         }
         print("!!!!! ViewDidAppear compelted, the coordinate of this Pin is \(selectedPin.latitude) and \(selectedPin.longitude)")
+//        collectionView?.reloadData()
         
-//        //set up indicator
-//        let activityIndicator = UIActivityIndicatorView()
-//        activityIndicator.center = self.view.center
-//
-//        activityIndicator.hidesWhenStopped = true
-//        activityIndicator.activityIndicatorViewStyle = .gray
-//        view.addSubview(activityIndicator)
-//        activityIndicator.startAnimating()
-        
-        
-        collectionView?.reloadData()
-        
-        activityIndicator.stopAnimating() //stop indicator
+        //stop indicator after view appear
+        activityIndicator.stopAnimating()
         UIApplication.shared.endIgnoringInteractionEvents()
         
     }
  
 
     // MARK: Collection View Data Source , UICollectionViewDataSource
-
-
-
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         return photoArray.count
@@ -103,12 +106,10 @@ class CollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewCell", for: indexPath) as! CollectionViewCell
+        
 //        cell.imageView.image = UIImage(named: "finn") //finn is local image
 
         cell.imageView.image = UIImage(data: photoArray[indexPath.row].image!)
-
-        
-        
         return cell
     }
 
@@ -125,9 +126,8 @@ class CollectionViewController: UICollectionViewController {
         
     }
     
-    //MARK: - Collection delegate method.
+    //MARK: - Collection delegate method, delete photo in Editing mode. open photo in Not-Editing mode
     var selectedImage: UIImage!
-
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if isEditing {
         context.delete(photoArray[indexPath.row])
@@ -154,7 +154,7 @@ class CollectionViewController: UICollectionViewController {
     
     //MARK: - Model Manupulation Methods
 
-    // Read data from store to itemArray,default inputs is reading out All Items belonging to same Category selectedCategory
+    // Read data from store to itemArray,default is reading out All Items belonging to same Category selectedPin
     
     func loadPhotos(with request:NSFetchRequest<Photo> = Photo.fetchRequest(), predicate:NSPredicate?=nil) {
         
@@ -181,42 +181,20 @@ class CollectionViewController: UICollectionViewController {
     
 }
 
-//MARK:  Flickr -- flickr.photos.search
-extension CollectionViewController {
+//MARK:  fitler the URLs and call PhotoLib Class to download images.Then store to Context and photoArray
+/*
+1. if there No photos in Core Data for this pin, download 15 random photos from Flickr.
+2. if there is Zero photo for this Pin from Flickr. Show Aler View to info user no photos are avabile.
+3. if there is less than 15 photos avabile from Flickr. Then download all those photos.
+*/
+ extension CollectionViewController {
     
-    
-//    func buildURL(lat:Double=0,lon:Double=0) -> URL {
-//        var components = URLComponents()
-//        components.scheme = "https"
-//        components.host = "api.flickr.com"
-//        components.path = "/services/rest"
-//        components.queryItems = [URLQueryItem]()
-//
-//        let queryItem1 = URLQueryItem(name: "method", value: "flickr.photos.search")
-//        let queryItem2 = URLQueryItem(name: "api_key", value: "11ebab0e0173a322ca87cee9c81a349a")
-//        let queryItem3 = URLQueryItem(name: "lat", value: String(lat))
-//        let queryItem4 = URLQueryItem(name: "lon", value: String(lon))
-//        let queryItem5 = URLQueryItem(name: "extras", value: "url_m")
-//        let queryItem6 = URLQueryItem(name: "format", value: "json")
-//
-//        components.queryItems!.append(queryItem1)
-//        components.queryItems!.append(queryItem2)
-//        components.queryItems!.append(queryItem3)
-//        components.queryItems!.append(queryItem4)
-//        components.queryItems!.append(queryItem5)
-//        components.queryItems!.append(queryItem6)
-//
-//        print(components.url!)
-//
-//        return components.url!
-//    }
-    
-    //MARK: get images and store them to photoArray and Context
     func getImgsFromURLs() {
         //        print("#### urlArray is \(urlArray)")
         let count = urlArray.count
         
         if count == 0 {
+            showMessage(title: "Flickr doesn't have photos for this location", message: "Pick another Location")
             print("@@@@@@@@@@  can't find any pictures at this Pin")
         } else {
             
@@ -233,75 +211,26 @@ extension CollectionViewController {
                 let url = URL(string:urlString)
                 let id = urlArray[randomIndex].id
                 
-                if let data = try? Data(contentsOf: url!) {
-                    
-                    // store returned Image data to Photo entity
-                    let newPhoto = Photo(context: self.context)
-                    newPhoto.image = data
-                    newPhoto.id = id
-                    newPhoto.parentPin = self.selectedPin
-                    self.photoArray.append(newPhoto)
-                    print("$$$ loading data from external URL and store it to photoArray and Context")
-                    
-                }
+                // store returned Image data to Photo entity
+                let newPhoto = Photo(context: self.context)
+                newPhoto.image = PhotoLib.getDataFromURL(url: url!)
+                newPhoto.id = id
+                newPhoto.parentPin = self.selectedPin
+                self.photoArray.append(newPhoto)
+                
             }
         }
     }
     
-    
-//    func getImage()  {
-//
-//        let imageURL = URL(string: "https://farm5.staticflickr.com//4567//38084351084_c82a317880.jpg")!
-//
-//        //        let imageURL = URL(string: "https://scontent.fsnc1-1.fna.fbcdn.net/v/t31.0-8/27368245_10156168543027002_2810235546452527170_o.jpg?oh=9be751f2dfb484e7cc89af4edfc15bed&oe=5B1C61A0")!
-//
-//        let task = URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
-//            if error == nil {
-//                //                performUIUpdatesOnMain {
-//                //                    self.imageView.image = UIImage(data: datax)
-//                //                }
-//
-////                    let tempPhoto = Photo()
-////                    tempPhoto.parentPin = self.selectedPin
-////                    tempPhoto.image = data
-////                    tempPhoto.title = "test"
-////                    print("$$$  here is the tempPhoto : \(tempPhoto)")
-////                    self.photoArray.append(tempPhoto)
-//
-//
-//                // create image
-//                let downloadedImage = UIImage(data: data!)
-//
-//
-//            } else {
-//                print("$$$ fail to access URL : \(error)")
-//            }
-//        }
-//        task.resume()
-//
-//        print("!!!!   getImage got called")
-//
-////        if let imageData = try? Data(contentsOf: imageURL){
-////
-////
-////
-////            print("$$$$ inside for loop")
-////            for i in 0...1 {
-////                let tempPhoto = Photo()
-////                tempPhoto.parentPin = selectedPin
-////                tempPhoto.image = imageData
-////                tempPhoto.title = "test"
-////                print("$$$  here is the tempPhoto : \(tempPhoto)")
-////                photoArray.append(tempPhoto)
-////            }
-////
-////        }
-////        else {
-////            print("failed to load image to photArray")
-////        }
-//
-//
-//    }
+    //Mark: - SHow message through Alert
+    func showMessage(title:String,message:String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        //Cancel Button
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: { (actionHandler) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 
