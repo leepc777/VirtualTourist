@@ -192,6 +192,16 @@ extension ViewController : MKMapViewDelegate {
 //        performSegue(withIdentifier: "goToPhotos", sender: self)
 //        }
         if control == view.rightCalloutAccessoryView {
+            
+//                    //MARK: - set up indicator here doesn't work. 
+//                    activityIndicator.center = view.center
+//                    activityIndicator.hidesWhenStopped = true
+//                    activityIndicator.activityIndicatorViewStyle = .gray
+//                    view.addSubview(activityIndicator)
+//                    activityIndicator.startAnimating()
+//                    UIApplication.shared.beginIgnoringInteractionEvents()
+
+            
             print("$$$   control is at right")
             self.selectedPin = findPin(lat: (annotation?.coordinate.latitude)!, lon: (annotation?.coordinate.longitude)!)
             

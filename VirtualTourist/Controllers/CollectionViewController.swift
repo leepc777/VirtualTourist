@@ -23,24 +23,57 @@ class CollectionViewController: UICollectionViewController {
         }
     }
     
+
+    
     struct Storyboard {
         static let leftAndRightPadding: CGFloat = 2.0
         static let numberOfItemsPerRow: CGFloat = 3.0
     }
 
     
+    
+    //MARK: refresh Collection View
     @objc func didTapSearchButton(sender: AnyObject){
 
+        //MARK: - set up indicator
+        activityIndicator.center = view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = .gray
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
+
+        
+////        collectionView?.reloadData()
+////        context.delete(selectedPin)
+//        photoArray = [Photo]()
+        
+        removePhotos()
+        getImgsFromURLs()
+        
+        //stop indicator after view appear
+        activityIndicator.stopAnimating()
+        UIApplication.shared.endIgnoringInteractionEvents()
+
         collectionView?.reloadData()
+        
         print("$$$$$$$$$ search button got tapped")
+
     }
 
+    func removePhotos() {
+        
+        for photo in photoArray {
+            context.delete(photo)
+        }
+        photoArray.removeAll()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         
-//        navigationItem.rightBarButtonItems = [editButtonItem,editButtonItem]
+        //        navigationItem.rightBarButtonItems = [editButtonItem,editButtonItem]
         
         let searchImage = UIImage(named: "search")!
         
@@ -55,44 +88,47 @@ class CollectionViewController: UICollectionViewController {
         
         let layout = collectionViewLayout as! UICollectionViewFlowLayout
         layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
-
+        
         
         urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
         
-        //MARK: - set up indicator
-        activityIndicator.center = view.center
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.activityIndicatorViewStyle = .gray
-        view.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
+                //MARK: - set up indicator
+                activityIndicator.center = view.center
+                activityIndicator.hidesWhenStopped = true
+                activityIndicator.activityIndicatorViewStyle = .gray
+                view.addSubview(activityIndicator)
+                activityIndicator.startAnimating()
+                UIApplication.shared.beginIgnoringInteractionEvents()
         
+//        getImgsFromURLs()
+
         
         
         print("!!!!! ViewDidLoad compelted, the coordinate of this Pin is \(selectedPin.latitude) and \(selectedPin.longitude)")
     }
-
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         
         
         // Fetching Photos from Store to context and PhotoArray.
         loadPhotos()
-//        print("$$$$$$$$$$   Collection get the selectedPin as \(self.selectedPin)")
-//        print("$$$$ the array storing all ID and URLs for every photos from Flickr \(urlArray) ")
+        //        print("$$$$$$$$$$   Collection get the selectedPin as \(self.selectedPin)")
+        //        print("$$$$ the array storing all ID and URLs for every photos from Flickr \(urlArray) ")
         
         
-        // Only download photos from Flikr when NO photos in local Core Data
-        if photoArray.count == 0 {
-            print("!!!!!!no photos in Context for this Pin, getting some PHOTOS !!!!!!!!! ")
-            getImgsFromURLs()
-        } else {
-            print("!!!!!!there are some photos at this Pin already!!!!!! !!!!! no need to download more unless you delete some")
-        }
+        //get images from URLs
+        getImgsFromURLs()
+        
+        
         print("!!!!! ViewDidAppear compelted, the coordinate of this Pin is \(selectedPin.latitude) and \(selectedPin.longitude)")
-//        collectionView?.reloadData()
+        
         
         //stop indicator after view appear
         activityIndicator.stopAnimating()
         UIApplication.shared.endIgnoringInteractionEvents()
+        
+//        collectionView?.reloadData()
         
     }
  
@@ -115,13 +151,16 @@ class CollectionViewController: UICollectionViewController {
 
     
     
-    //MARK: - delete collection cell
+    //MARK: - Editing Mode setup , disable search button in Editing mode
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         print("#### setEditing was called")
 
         if editing == true {
+            navigationItem.rightBarButtonItem?.isEnabled = false
             print("#### editing is true. setEditing was called")
+        } else {
+            navigationItem.rightBarButtonItem?.isEnabled = true
         }
         
     }
@@ -179,7 +218,6 @@ class CollectionViewController: UICollectionViewController {
     }
 
     
-}
 
 //MARK:  fitler the URLs and call PhotoLib Class to download images.Then store to Context and photoArray
 /*
@@ -187,39 +225,58 @@ class CollectionViewController: UICollectionViewController {
 2. if there is Zero photo for this Pin from Flickr. Show Aler View to info user no photos are avabile.
 3. if there is less than 15 photos avabile from Flickr. Then download all those photos.
 */
- extension CollectionViewController {
-    
+
     func getImgsFromURLs() {
-        //        print("#### urlArray is \(urlArray)")
+        print("&&&&&&& getImgsFromURLs got called")
+                //MARK: - set up indicator
+                activityIndicator.center = self.view.center
+                activityIndicator.hidesWhenStopped = true
+                activityIndicator.activityIndicatorViewStyle = .gray
+                self.view.addSubview(activityIndicator)
+                activityIndicator.startAnimating()
+                UIApplication.shared.beginIgnoringInteractionEvents()
+        
+        
+                print("#### urlArray is \(urlArray) and the avaible photos count from Flickr is \(urlArray.count)")
         let count = urlArray.count
         
-        if count == 0 {
-            showMessage(title: "Flickr doesn't have photos for this location", message: "Pick another Location")
-            print("@@@@@@@@@@  can't find any pictures at this Pin")
-        } else {
+        if photoArray.count == 0 {
+            print("!!!!!!no photos in Context for this Pin, so we can get Flickr photos ")
             
-//            if photoArray.count < urlArray.count
-            
-            // set the max number of photos showing in the collecition view as 15
-            let numberofShowingPhotos = urlArray.count<15 ? urlArray.count:15
-            print ("@@@@@@@@@  remaind is \(remainder) , photoArray.count is \(photoArray.count)")
-            for index in 0 ..< numberofShowingPhotos {
-                let randomIndex = Int(arc4random()) % count
-                let idURL = urlArray[randomIndex] // idURL is PhotoURL type
-                print("@@@@@@   idURL at index:\(index) is \(idURL)")
-                let urlString = idURL.url_m
-                let url = URL(string:urlString)
-                let id = urlArray[randomIndex].id
+            if count == 0 {
+                showMessage(title: "Flickr doesn't have photos for this location", message: "Pick another Location")
+                print("@@@@@@@@@@  can't find any pictures at this Pin")
+            } else {
                 
-                // store returned Image data to Photo entity
-                let newPhoto = Photo(context: self.context)
-                newPhoto.image = PhotoLib.getDataFromURL(url: url!)
-                newPhoto.id = id
-                newPhoto.parentPin = self.selectedPin
-                self.photoArray.append(newPhoto)
+                //            if photoArray.count < urlArray.count
                 
+                // set the max number of photos showing in the collecition view as 15
+                let numberofShowingPhotos = urlArray.count<15 ? urlArray.count:15
+                print ("@@@@@@@@@   Flickr has \(urlArray.count) pictures for this location")
+                for index in 0 ..< numberofShowingPhotos {
+                    let randomIndex = Int(arc4random()) % count
+                    let idURL = urlArray[randomIndex] // idURL is PhotoURL type
+                    print("@@@@@@   idURL at index:\(index) is \(idURL)")
+                    let urlString = idURL.url_m
+                    let url = URL(string:urlString)
+                    let id = urlArray[randomIndex].id
+                    
+                    // store returned Image data to Photo entity
+                    let newPhoto = Photo(context: self.context)
+                    newPhoto.image = PhotoLib.getDataFromURL(url: url!)
+                    newPhoto.id = id
+                    newPhoto.parentPin = self.selectedPin
+                    self.photoArray.append(newPhoto)
+                    
+                }
             }
+            
         }
+        
+        //stop indicator after view appear
+        activityIndicator.stopAnimating()
+        UIApplication.shared.endIgnoringInteractionEvents()
+
     }
     
     //Mark: - SHow message through Alert
