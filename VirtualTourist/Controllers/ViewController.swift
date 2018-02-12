@@ -19,7 +19,8 @@ class ViewController: UIViewController {
     var selectedlat : Double!
     var selectedlon : Double!
     var selectedPin = Pin()
-    
+    let activityIndicator = UIActivityIndicatorView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         loadPins()
@@ -145,7 +146,7 @@ class ViewController: UIViewController {
         
     }
     
-    //MARK: - find Pin. find and read out the Pin object from pinArray based on Lat&Lon
+    //MARK: - find Pin entity. find and read out the Pin object from pinArray based on Lat&Lon
     func findPin (lat:Double,lon:Double) -> Pin {
         
         var matchedPin = Pin()
@@ -198,9 +199,23 @@ extension ViewController : MKMapViewDelegate {
         if control == view.rightCalloutAccessoryView {
             print("$$$   control is at right")
             self.selectedPin = findPin(lat: (annotation?.coordinate.latitude)!, lon: (annotation?.coordinate.longitude)!)
+            
+            //set up indicator
+////            let activityIndicator = UIActivityIndicatorView()
+////            activityIndicator.center = self.view.center
+//            activityIndicator.center = mapView.center
+//
+//            activityIndicator.hidesWhenStopped = true
+//            activityIndicator.activityIndicatorViewStyle = .gray
+//            view.addSubview(activityIndicator)
+//            activityIndicator.startAnimating()
+//            UIApplication.shared.beginIgnoringInteractionEvents()
+
             performSegue(withIdentifier: "goToPhotos", sender: self)
 
-            
+//            activityIndicator.stopAnimating() //stop indicator
+//            UIApplication.shared.endIgnoringInteractionEvents()
+
                 }
         if control == view.leftCalloutAccessoryView {
             print("$$$   control is at left")
@@ -208,6 +223,8 @@ extension ViewController : MKMapViewDelegate {
             selectedlat = annotation?.coordinate.latitude
             selectedlon = annotation?.coordinate.longitude
 
+
+            
 //            deletePin(lat: (view.annotation?.coordinate.latitude)!, lon: (view.annotation?.coordinate.longitude)!)
             
             

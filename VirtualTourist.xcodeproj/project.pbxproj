@@ -17,6 +17,7 @@
 		22532F79202BC42C0035A806 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22532F78202BC42C0035A806 /* Assets.xcassets */; };
 		22532F7C202BC42C0035A806 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22532F7A202BC42C0035A806 /* LaunchScreen.storyboard */; };
 		22532F85202BE6150035A806 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 22532F83202BE6150035A806 /* Model.xcdatamodeld */; };
+		22C24094203132F500126B5D /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C24093203132F500126B5D /* GCDBlackBox.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		22532F7B202BC42C0035A806 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		22532F7D202BC42C0035A806 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22532F84202BE6150035A806 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		22C24093203132F500126B5D /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +54,7 @@
 				22337E90202D1FA7006AD54E /* CollectionViewController.swift */,
 				22337E97202DBDA8006AD54E /* CollectionViewCell.swift */,
 				2211211D202FE8CD009E5D9C /* SwiftyJSON.swift */,
+				22C24093203132F500126B5D /* GCDBlackBox.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -167,6 +170,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22C24094203132F500126B5D /* GCDBlackBox.swift in Sources */,
 				22337E98202DBDA8006AD54E /* CollectionViewCell.swift in Sources */,
 				22337E91202D1FA7006AD54E /* CollectionViewController.swift in Sources */,
 				22532F74202BC42C0035A806 /* ViewController.swift in Sources */,
