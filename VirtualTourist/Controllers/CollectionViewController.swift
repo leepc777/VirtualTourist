@@ -24,34 +24,34 @@ class CollectionViewController: UICollectionViewController {
         }
     }
     
+    struct Storyboard {
+        static let leftAndRightPadding: CGFloat = 2.0
+        static let numberOfItemsPerRow: CGFloat = 3.0
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = editButtonItem
-        urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
-                //set up indicator
-//                let activityIndicator = UIActivityIndicatorView()
-                activityIndicator.center = view.center
-                activityIndicator.hidesWhenStopped = true
-                activityIndicator.activityIndicatorViewStyle = .gray
-                view.addSubview(activityIndicator)
-                activityIndicator.startAnimating()
+        
+        // change the layout of the colleciton view
+        let collectionViewWidth = collectionView?.frame.width
+        let itemWidth = (collectionViewWidth! - Storyboard.leftAndRightPadding) / Storyboard.numberOfItemsPerRow
+        
+        let layout = collectionViewLayout as! UICollectionViewFlowLayout
+        layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
 
         
-//        loadPhotos()
-//        print("$$$$$$$$$$   Collection get the selectedPin as \(self.selectedPin)")
-//        print("$$$$ the array storing all ID and URLs for every photos from Flickr \(urlArray) ")
-//        //            getImage()
-//
-//        if photoArray.count == 0 {
-//            print("!!!!!!no photos in Context for this Pin, getting some PHOTOS !!!!!!!!! ")
-//            getImgsFromURLs()
-//        } else {
-//
-//            print("!!!!!!there are some photos at this Pin already!!!!!! !!!!! no need to download more unless you delete some")
-//
-//        }
-
+        urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
+        
+        //MARK: - set up indicator
+        activityIndicator.center = view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = .gray
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        
+        
         
         print("!!!!! ViewDidLoad compelted, the coordinate of this Pin is \(selectedPin.latitude) and \(selectedPin.longitude)")
     }
@@ -104,13 +104,10 @@ class CollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewCell", for: indexPath) as! CollectionViewCell
 //        cell.imageView.image = UIImage(named: "finn") //finn is local image
-//        cell.imageView.image = UIImage(data: testArray[indexPath.row]) //read from testArray
+
         cell.imageView.image = UIImage(data: photoArray[indexPath.row].image!)
 
         
-//        cell.imageView.image = UIImage(data: testArray[indexPath.row])
-//        let photo = photoArray[indexPath.row]
-//        cell.imageView.image = UIImage(data: photo.image!)
         
         return cell
     }
@@ -128,17 +125,32 @@ class CollectionViewController: UICollectionViewController {
         
     }
     
+    //MARK: - Collection delegate method.
+    var selectedImage: UIImage!
+
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if isEditing {
         context.delete(photoArray[indexPath.row])
         photoArray.remove(at: indexPath.row)
         collectionView.deleteItems(at: [indexPath])
         } else {
-            //open detail view
+//            cell.imageView.image = UIImage(data: photoArray[indexPath.row].image!)
+
+            selectedImage = UIImage(data: photoArray[indexPath.row].image!)
+            performSegue(withIdentifier: "goToPhoto", sender: nil)
+        }
+    }
+    
+    //MARK: Prepare for Segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToPhoto" {
             
+            let detailVC = segue.destination as! DetailViewController
+            detailVC.image = selectedImage
         }
     }
 
+    
     
     //MARK: - Model Manupulation Methods
 
