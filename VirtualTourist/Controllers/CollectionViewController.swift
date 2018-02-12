@@ -9,131 +9,86 @@ import Foundation
 import UIKit
 import CoreData
 
-private let reuseIdentifier = "collectionCell"
+//private let reuseIdentifier = "collectionCell"
 
 class CollectionViewController: UICollectionViewController {
 
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var photoArray = [Photo]()
-    var testArray = [Data]()
     var urlArray : [PhotoURL]! // store the iD/URL of photos retured by Flickr.
+    let activityIndicator = UIActivityIndicatorView()
 
     var selectedPin : Pin! {
         didSet {
-            
-//            //set up indicator
-//                        let activityIndicator = UIActivityIndicatorView()
-//                        activityIndicator.center = self.view.center
-////                        activityIndicator.center = mapView.center
-//
-//                        activityIndicator.hidesWhenStopped = true
-//                        activityIndicator.activityIndicatorViewStyle = .gray
-//                        view.addSubview(activityIndicator)
-//                        activityIndicator.startAnimating()
-
-            
-            urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
-            loadPhotos()
-            print("$$$$$$$$$$   Collection get the selectedPin as \(self.selectedPin)")
-            print("$$$$ the array storing all ID and URLs for every photos from Flickr \(urlArray) ")
-//            getImage()
-            
-            if photoArray.count == 0 {
-                print("!!!!!!no photos in Context for this Pin, getting some PHOTOS !!!!!!!!! ")
-            getImgsFromURLs()
-            } else {
-                
-                print("!!!!!!there are some photos at this Pin already!!!!!! !!!!! no need to download more unless you delete some")
-                
-            }
-
-            
-            
+//            urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
         }
-        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = editButtonItem
-        
-//        getImgsFromURLs()
-        
-//        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "collectionCell")
-        
-        /*
-        let imageURL = URL(string: "https://scontent.fsnc1-1.fna.fbcdn.net/v/t31.0-8/27368245_10156168543027002_2810235546452527170_o.jpg?oh=9be751f2dfb484e7cc89af4edfc15bed&oe=5B1C61A0")
-        // create network request
-        
-        if let data = try? Data(contentsOf: imageURL!) {
+        urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
+                //set up indicator
+//                let activityIndicator = UIActivityIndicatorView()
+                activityIndicator.center = view.center
+                activityIndicator.hidesWhenStopped = true
+                activityIndicator.activityIndicatorViewStyle = .gray
+                view.addSubview(activityIndicator)
+                activityIndicator.startAnimating()
 
-            // store returned Image data to Photo entity
-            let newPhoto = Photo(context: self.context)
-            newPhoto.image = data
-            newPhoto.id = "test"
-            newPhoto.parentPin = self.selectedPin
-            self.photoArray.append(newPhoto)
-            print("$$$ loading data from external URL in viewDidLoad")
-
-        }
         
-        */
-        
-        /*
-                let task = URLSession.shared.dataTask(with: imageURL!) { (data, response, error) in
-        
-                    if error == nil {
-                        
-                        //store to test Array
-                        self.testArray.append(data!)
-                        self.testArray.append(data!)
-                        self.testArray.append(data!)
-                        self.testArray.append(data!)
-                        
-                        // store returned data to Photo entity
-                        let newPhoto = Photo(context: self.context)
-                        newPhoto.image = data!
-                        newPhoto.title = "test"
-                        newPhoto.parentPin = self.selectedPin
-                        self.photoArray.append(newPhoto)
-                        
-                        print("^^^^^^  successfully dataTask to download image in ViewDidLoad")
-                        
-                        // update UI on a main thread
-                        
-                    } else {
-                        print(error!)
-                    }
-                }
-        
-                task.resume()
-    */
-        
-//        let newImageData = UIImageJPEGRepresentation(UIImage(named:"finn")!, 1)
+//        loadPhotos()
+//        print("$$$$$$$$$$   Collection get the selectedPin as \(self.selectedPin)")
+//        print("$$$$ the array storing all ID and URLs for every photos from Flickr \(urlArray) ")
+//        //            getImage()
 //
-//        testArray.append(newImageData!)
-//        testArray.append(newImageData!)
-//        testArray.append(newImageData!)
-//        testArray.append(newImageData!)
+//        if photoArray.count == 0 {
+//            print("!!!!!!no photos in Context for this Pin, getting some PHOTOS !!!!!!!!! ")
+//            getImgsFromURLs()
+//        } else {
+//
+//            print("!!!!!!there are some photos at this Pin already!!!!!! !!!!! no need to download more unless you delete some")
+//
+//        }
+
         
-//        var newPhoto = Photo()
-//        newPhoto.image = newImageData
-//        newPhoto.title = "test"
-//        newPhoto.parentPin = selectedPin
-
-//        photoArray.append(newPhoto)
-//        photoArray.append(newPhoto)
-//        photoArray.append(newPhoto)
-//        photoArray.append(newPhoto)
-
-
- 
- 
-print("!!!!! ViewDidLoad compelted, the coordinate of this Pin is \(selectedPin.latitude) and \(selectedPin.longitude)")
+        print("!!!!! ViewDidLoad compelted, the coordinate of this Pin is \(selectedPin.latitude) and \(selectedPin.longitude)")
     }
 
-
+    override func viewDidAppear(_ animated: Bool) {
+        
+        loadPhotos()
+        print("$$$$$$$$$$   Collection get the selectedPin as \(self.selectedPin)")
+        print("$$$$ the array storing all ID and URLs for every photos from Flickr \(urlArray) ")
+        //            getImage()
+        
+        if photoArray.count == 0 {
+            print("!!!!!!no photos in Context for this Pin, getting some PHOTOS !!!!!!!!! ")
+            getImgsFromURLs()
+        } else {
+            
+            print("!!!!!!there are some photos at this Pin already!!!!!! !!!!! no need to download more unless you delete some")
+            
+        }
+        print("!!!!! ViewDidAppear compelted, the coordinate of this Pin is \(selectedPin.latitude) and \(selectedPin.longitude)")
+        
+//        //set up indicator
+//        let activityIndicator = UIActivityIndicatorView()
+//        activityIndicator.center = self.view.center
+//
+//        activityIndicator.hidesWhenStopped = true
+//        activityIndicator.activityIndicatorViewStyle = .gray
+//        view.addSubview(activityIndicator)
+//        activityIndicator.startAnimating()
+        
+        
+        collectionView?.reloadData()
+        
+        activityIndicator.stopAnimating() //stop indicator
+        UIApplication.shared.endIgnoringInteractionEvents()
+        
+    }
  
 
     // MARK: Collection View Data Source , UICollectionViewDataSource
@@ -141,8 +96,7 @@ print("!!!!! ViewDidLoad compelted, the coordinate of this Pin is \(selectedPin.
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("%%%% testArray count is : \(testArray.count)")
-//        return testArray.count
+        
         return photoArray.count
         
     }
@@ -179,6 +133,9 @@ print("!!!!! ViewDidLoad compelted, the coordinate of this Pin is \(selectedPin.
         context.delete(photoArray[indexPath.row])
         photoArray.remove(at: indexPath.row)
         collectionView.deleteItems(at: [indexPath])
+        } else {
+            //open detail view
+            
         }
     }
 
