@@ -23,13 +23,6 @@ class CollectionViewController: UICollectionViewController {
         }
     }
     
-
-    
-//    struct Storyboard {
-//        static let leftAndRightPadding: CGFloat = 2.0
-//        static let numberOfItemsPerRow: CGFloat = 3.0
-//    }
-//
     
     
     //MARK: refresh Collection View
@@ -40,14 +33,24 @@ class CollectionViewController: UICollectionViewController {
         //MARK: - set up indicator
         activityIndicator.center = view.center
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.activityIndicatorViewStyle = .gray
+        activityIndicator.activityIndicatorViewStyle = .whiteLarge
         self.view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
-//        UIApplication.shared.beginIgnoringInteractionEvents()
+        UIApplication.shared.beginIgnoringInteractionEvents()
 
-        
-        removePhotos()
-        getImgsFromURLs()
+        performUIUpdatesOnMain {
+            self.urlArray = PhotoLib.getPhotoURLs(lat: self.selectedPin.latitude, lon: self.selectedPin.longitude)
+            self.removePhotos()
+            self.getImgsFromURLs()
+            
+            //stop indicator after view appear
+            self.activityIndicator.stopAnimating()
+            UIApplication.shared.endIgnoringInteractionEvents()
+
+        }
+//        urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
+//        removePhotos()
+//        getImgsFromURLs()
         
 //        //stop indicator after view appear
 //        activityIndicator.stopAnimating()
@@ -59,7 +62,7 @@ class CollectionViewController: UICollectionViewController {
 
     }
 
-    // emtpy stored Photos for selectedPin from context and PhotoArray
+    //MARK: - delete/emtpy stored Photos for selectedPin from context and PhotoArray
     func removePhotos() {
         
         for photo in photoArray {
@@ -67,7 +70,6 @@ class CollectionViewController: UICollectionViewController {
         }
         photoArray.removeAll()
     }
-    
     
     
     override func viewDidLoad() {
@@ -97,47 +99,11 @@ class CollectionViewController: UICollectionViewController {
         layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
         
         
-//        //MARK: - set up indicator
-//        activityIndicator.center = view.center
-//        activityIndicator.hidesWhenStopped = true
-//        activityIndicator.activityIndicatorViewStyle = .gray
-//        self.view.addSubview(activityIndicator)
-//        activityIndicator.startAnimating()
-//        UIApplication.shared.beginIgnoringInteractionEvents()
-        
-        
-//        //MARK: Prepare data for collection view.
-//        // 1. fetch photos from context to photoArray to show stored Photos
-//        fetchPhotos()
-//
-//        // 2. get all URLs for this location(selectedPin)
-//        urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
-//
-//        // 3. filter & pick 15 random URLs to download images to photoArray which is data souce for collection view.
-//        getImgsFromURLs()
         
         print("!!!!! ViewDidLoad compelted, the coordinate of this Pin is \(selectedPin.latitude) and \(selectedPin.longitude) and the stored photos at this location is \(photoArray.count) and total URLs for this locaiton is \(urlArray.count)" )
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        //MARK: - set up indicator
-//        activityIndicator.center = view.center
-//        activityIndicator.hidesWhenStopped = true
-//        activityIndicator.activityIndicatorViewStyle = .gray
-//        self.view.addSubview(activityIndicator)
-//        activityIndicator.startAnimating()
-//        UIApplication.shared.beginIgnoringInteractionEvents()
-
-//        //MARK: Prepare data for collection view.
-//        // 1. fetch photos from context to photoArray to show stored Photos
-//        fetchPhotos()
-//
-//        // 2. get all URLs for this location(selectedPin)
-//        urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
-//
-//        // 3. filter & pick 15 random URLs to download images to photoArray which is data souce for collection view.
-//        getImgsFromURLs()
-
         
         print("$$$$$$$$   viewWillAppear got called  $$$$$$")
 
@@ -154,6 +120,9 @@ class CollectionViewController: UICollectionViewController {
                 urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
         
                 // 3. filter & pick 15 random URLs to download images to photoArray which is data souce for collection view.
+//                getImgsFromURLs()
+        
+        
         performUIUpdatesOnMain {
             print("%%%% Call GCD to sumbit getImgsFromURLs()")
             self.getImgsFromURLs()
@@ -165,9 +134,6 @@ class CollectionViewController: UICollectionViewController {
         }
 
         
-//        //stop indicator after view appear
-//        activityIndicator.stopAnimating()
-//        UIApplication.shared.endIgnoringInteractionEvents()
         
         
         print("!!!!! ViewDidAppear compelted, the coordinate of this Pin is \(selectedPin.latitude) and \(selectedPin.longitude) and the stored photos at this location is \(photoArray.count) and total URLs for this locaiton is \(urlArray.count)" )
@@ -188,14 +154,12 @@ class CollectionViewController: UICollectionViewController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewCell", for: indexPath) as! CollectionViewCell
         
 //        cell.imageView.image = UIImage(named: "finn") //finn is local image
+//        cell.imageView.image = UIImage(data: photoArray[indexPath.row].image!)
 
-        cell.imageView.image = UIImage(data: photoArray[indexPath.row].image!)
+        performUIUpdatesOnMain {
+            cell.imageView.image = UIImage(data: self.photoArray[indexPath.row].image!)
+        }
         
-        // loading individual photo from Flickr one by one instead.
-//        performUIUpdatesOnMain {
-//            let randomImg = UIImage(data:PhotoLib.getDataFromURL(urlString: self.filteredURLs[indexPath.row].url_m))
-//            cell.imageView.image = randomImg
-//        }
         
         print("%%%%%%%%%%  cellForItemAt got trigger %%%%%%%%%%%%%% ")
 
@@ -227,8 +191,6 @@ class CollectionViewController: UICollectionViewController {
         photoArray.remove(at: indexPath.row)
         collectionView.deleteItems(at: [indexPath])
         } else {
-//            cell.imageView.image = UIImage(data: photoArray[indexPath.row].image!)
-
             selectedImage = UIImage(data: photoArray[indexPath.row].image!)
             performSegue(withIdentifier: "goToPhoto", sender: nil)
         }
@@ -248,7 +210,7 @@ class CollectionViewController: UICollectionViewController {
     //MARK: - Model Manupulation Methods
 
     // Read data from store to itemArray,default is reading out All Items belonging to same Category selectedPin
-    
+    //MARK: Fetch Photos
     func fetchPhotos(with request:NSFetchRequest<Photo> = Photo.fetchRequest(), predicate:NSPredicate?=nil) {
         
         let pinPredicate = NSPredicate(format: "parentPin == %@", selectedPin!)
@@ -282,14 +244,6 @@ class CollectionViewController: UICollectionViewController {
 
     func getImgsFromURLs() {
         print("&&&&&&& getImgsFromURLs got called")
-//                //MARK: - set up indicator
-//                activityIndicator.center = self.view.center
-//                activityIndicator.hidesWhenStopped = true
-//                activityIndicator.activityIndicatorViewStyle = .gray
-//                self.view.addSubview(activityIndicator)
-//                activityIndicator.startAnimating()
-//                UIApplication.shared.beginIgnoringInteractionEvents()
-        
         
         let urlArrayCount = urlArray.count
         
@@ -301,14 +255,13 @@ class CollectionViewController: UICollectionViewController {
                 print("@@@@@@@@@@  can't find any pictures at this Pin")
             } else {
                 
-                
                 // set the max number of photos showing in the collecition view as 15
                 let numberofShowingPhotos = urlArray.count<15 ? urlArray.count:15
                 print ("@@@@@@@@@   Flickr has \(urlArray.count) pictures for this location")
                 for index in 0 ..< numberofShowingPhotos {
                     let randomIndex = Int(arc4random()) % urlArrayCount
                     let randomURL = urlArray[randomIndex] // randomURL is PhotoURL type,contains iD/URL
-                    print("@@@@@@   randomURL at index:\(index) is \(randomURL)")
+//                    print("@@@@@@   randomURL at index:\(index) is \(randomURL)")
                     
                     // store returned Image data to Photo entity
                     let newPhoto = Photo(context: self.context)
@@ -319,7 +272,11 @@ class CollectionViewController: UICollectionViewController {
                     // Build photoArray for Collection View Data Source
                     self.photoArray.append(newPhoto)
                     self.filteredURLs.append(randomURL)
-                    
+//                    let insertedIndexPath = IndexPath(item: photoArray.count, section: 0)
+//                    collectionView?.deleteItems(at: [insertedIndexPath])
+//                    collectionView?.insertItems(at: [insertedIndexPath])
+
+                    //                    collectionView?.reloadData()
                 }
             }
             

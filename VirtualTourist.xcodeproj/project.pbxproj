@@ -84,7 +84,7 @@
 				22532F71202BC42C0035A806 /* AppDelegate.swift */,
 				22337E92202D200C006AD54E /* Controllers */,
 				22532F86202BE61E0035A806 /* Model */,
-				22532F75202BC42C0035A806 /* Main.storyboard */,
+				22BC24F9203301F900B22E0A /* Views */,
 				22532F78202BC42C0035A806 /* Assets.xcassets */,
 				22532F7A202BC42C0035A806 /* LaunchScreen.storyboard */,
 				22532F7D202BC42C0035A806 /* Info.plist */,
@@ -99,6 +99,14 @@
 				2211211B202FE6E1009E5D9C /* DataModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		22BC24F9203301F900B22E0A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				22532F75202BC42C0035A806 /* Main.storyboard */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

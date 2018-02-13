@@ -26,18 +26,6 @@ class ViewController: UIViewController {
         loadPins()
         
         
-//        let span:MKCoordinateSpan = MKCoordinateSpanMake(0.1, 0.1)
-//        let location:CLLocationCoordinate2D = CLLocationCoordinate2DMake(37.760122, -122.468158)
-//        let region:MKCoordinateRegion = MKCoordinateRegionMake(location, span)
-//        map.setRegion(region, animated: true)
-//
-//        let annotation = MKPointAnnotation()
-//        annotation.coordinate = location
-//        annotation.title = " my shop"
-//        annotation.subtitle = " come visit me here !"
-//        map.addAnnotation(annotation)
-        
-        
         print("&&& where is our data",FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
 
     }
@@ -147,7 +135,7 @@ class ViewController: UIViewController {
                 print("####  find the mached Pin in pinArray")
                 break
             } else {
-                print("$$$ No match Pin in the current pinArray")
+//                print("$$$ No match Pin in the current pinArray")
             }
         }
         
@@ -163,7 +151,7 @@ extension ViewController : MKMapViewDelegate {
     // MARK: Wire a button to the pin to bring up confirmation window
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?{
-        print("&&&   mapView viewFor annotation got called")
+//        print("&&&   mapView viewFor annotation got called")
         let reuseId = "pin"
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         
@@ -187,10 +175,7 @@ extension ViewController : MKMapViewDelegate {
         print("&&&   mapView annotationView view got called")
         let annotation = view.annotation
         
-//        if control == view.detailCalloutAccessoryView {
-//            print("&&&&& you tapped pin")
-//        performSegue(withIdentifier: "goToPhotos", sender: self)
-//        }
+
         if control == view.rightCalloutAccessoryView {
             
 //                    //MARK: - set up indicator here doesn't work.

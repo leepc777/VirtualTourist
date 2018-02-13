@@ -32,20 +32,33 @@ class PhotoLib {
 
         
         var results = [PhotoURL]()
-        let url = buildURL(lat:lat, lon:lon)
+        let request = buildRequestURL(lat:lat, lon:lon)
         
 //        performUIUpdatesOnMain {
-//            results = sendReguest(url: url)
+//            results = sendReguest(url: request)
 //
 //        }
-        results = sendReguest(url: url)
         
-        print("####### PhotoLib.getPhotoURLs : Requested HTTP url to Flickr is \(url)")
+        results = sendReguest(request: request,lat: lat,lon: lon)
+        
+        //check page number and get 2nd result back.
+        
+//        print("####### PhotoLib.getPhotoURLs : 1st Requested HTTP url to Flickr is \(request)")
         return results
     }
     
+//    //check pages and randomly pick one page and get another 2nd JSON result back.
+//    class func requestWithRandomPage(results:[PhotoURL]) -> [PhotoURL] {
+//        var newResult = [PhotoURL]()
+//        let result = results[0]
+//        
+//        return newResult
+//    }
+    
     //build URL
-      class func buildURL(lat:Double=0,lon:Double=0) -> URL {
+    class func buildRequestURL(lat:Double=0,lon:Double=0,numberOfPage:String = "1") -> URL {
+        
+//        let numberOfPage : Int
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.flickr.com"
@@ -59,6 +72,7 @@ class PhotoLib {
         let queryItem5 = URLQueryItem(name: "extras", value: "url_m")
         let queryItem6 = URLQueryItem(name: "format", value: "json")
         let queryItem7 = URLQueryItem(name: "nojsoncallback", value: "1")
+        let queryItem8 = URLQueryItem(name: "page", value: numberOfPage)
         
         components.queryItems!.append(queryItem1)
         components.queryItems!.append(queryItem2)
@@ -67,29 +81,39 @@ class PhotoLib {
         components.queryItems!.append(queryItem5)
         components.queryItems!.append(queryItem6)
         components.queryItems!.append(queryItem7)
+        components.queryItems!.append(queryItem8)
 
-        print("####### PhotoLib.buildURL: URLComponents URL \(components.url!)")
+
+//        print("####### PhotoLib.buildURL: URLComponents URL \(components.url!)")
         
         return components.url!
     }
     
     // Send URL and Parse returned JSON data
-    private class func sendReguest(url:URL) -> [PhotoURL]{
+    private class func sendReguest(request:URL,lat:Double=0,lon:Double=0) -> [PhotoURL]{
         
         var results = [PhotoURL]()
         
-        if let data = try? Data(contentsOf: url) {
-//            print("##### JSON data is \(data)")
+        if let data = try? Data(contentsOf: request) {
             let json = try? JSON(data:data)
-//            let json = parseJSON(data: data)
-//            print("##### convered JSON data is \(json)")
-
-//            if json["metadata"]["responseInfo"]["status"].intValue == 200 {
             if json!["stat"].stringValue == "ok" {
-
-//                print("##### JSON data is OK : \(json)")
-                results =  parse(json: json!)
-            
+                if json!["photos"]["pages"] > 1 {
+                    print("$$$$$$$$$$   there are more than one pages !")
+                    let maxPage = json!["photos"]["pages"].intValue
+                    let randomPage = Int(arc4random()) % maxPage
+                    let newRequest = buildRequestURL(lat: lat, lon: lon, numberOfPage:String(randomPage))
+                    
+                    if let data = try? Data(contentsOf: newRequest) {
+                        let json = try? JSON(data:data)
+                        results =  parse(json: json!)
+                        print("2st Requested HTTP url to Flickr is \(newRequest)")
+                    }
+                    else {print("failt to get Data for the 2nd request (with random page number)")}
+                
+                } else {
+                    print("$$$$$$ only one page !!!!  ")
+                    results =  parse(json: json!)
+                }
             }
         }
         
@@ -114,20 +138,22 @@ class PhotoLib {
     }
 
     
-    private class func parseJSON (data:Data) -> [String:AnyObject] {
-        let parsedResult: [String:AnyObject]!
-        do {
-            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
-        } catch {
-            
-//            displayError("$$$  Could not parse the data as JSON: '\(data)'")
-            print("$$$  Could not parse the data as JSON: '\(data)'")
+//    private class func parseJSON (data:Data) -> [String:AnyObject] {
+//        let parsedResult: [String:AnyObject]!
+//        do {
+//            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String:AnyObject]
+//        } catch {
+//
+////            displayError("$$$  Could not parse the data as JSON: '\(data)'")
+//            print("$$$  Could not parse the data as JSON: '\(data)'")
+//
+//            return [:]
+//        }
+//        return parsedResult
+//    }
 
-            return [:]
-        }
-        return parsedResult
-    }
-
+    
+    // Load Image from URL
     static func getDataFromURL(urlString:String) -> Data{
         let url = URL(string:urlString)!
         var returnData = Data()
