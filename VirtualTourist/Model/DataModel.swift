@@ -8,6 +8,11 @@
 
 import UIKit
 
+struct Storyboard {
+    static let leftAndRightPadding: CGFloat = 2.0
+    static let numberOfItemsPerRow: CGFloat = 3.0
+}
+
 struct PhotoURL {
     var id = String()
     var url_m = String()
@@ -29,8 +34,13 @@ class PhotoLib {
         var results = [PhotoURL]()
         let url = buildURL(lat:lat, lon:lon)
         
+//        performUIUpdatesOnMain {
+//            results = sendReguest(url: url)
+//
+//        }
         results = sendReguest(url: url)
-        print("#######  url is \(url)")
+        
+        print("####### PhotoLib.getPhotoURLs : Requested HTTP url to Flickr is \(url)")
         return results
     }
     
@@ -58,7 +68,7 @@ class PhotoLib {
         components.queryItems!.append(queryItem6)
         components.queryItems!.append(queryItem7)
 
-        print(components.url!)
+        print("####### PhotoLib.buildURL: URLComponents URL \(components.url!)")
         
         return components.url!
     }
@@ -118,7 +128,8 @@ class PhotoLib {
         return parsedResult
     }
 
-    static func getDataFromURL(url:URL) -> Data{
+    static func getDataFromURL(urlString:String) -> Data{
+        let url = URL(string:urlString)!
         var returnData = Data()
         if let data = try? Data(contentsOf: url) {
             

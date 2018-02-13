@@ -193,13 +193,13 @@ extension ViewController : MKMapViewDelegate {
 //        }
         if control == view.rightCalloutAccessoryView {
             
-                    //MARK: - set up indicator here doesn't work.
-                    activityIndicator.center = view.center
-                    activityIndicator.hidesWhenStopped = true
-                    activityIndicator.activityIndicatorViewStyle = .gray
-                    self.view.addSubview(activityIndicator)
-                    activityIndicator.startAnimating()
-                    UIApplication.shared.beginIgnoringInteractionEvents()
+//                    //MARK: - set up indicator here doesn't work.
+//                    activityIndicator.center = view.center
+//                    activityIndicator.hidesWhenStopped = true
+//                    activityIndicator.activityIndicatorViewStyle = .gray
+//                    self.view.addSubview(activityIndicator)
+//                    activityIndicator.startAnimating()
+//                    UIApplication.shared.beginIgnoringInteractionEvents()
 
             
             print("$$$   control is at right")
@@ -228,9 +228,9 @@ extension ViewController : MKMapViewDelegate {
         let nextVC = segue.destination as! CollectionViewController
         nextVC.selectedPin = self.selectedPin
         
-        //stop indicator after view appear
-        activityIndicator.stopAnimating()
-        UIApplication.shared.endIgnoringInteractionEvents()
+//        //stop indicator after view appear
+//        activityIndicator.stopAnimating()
+//        UIApplication.shared.endIgnoringInteractionEvents()
     }
 
     
