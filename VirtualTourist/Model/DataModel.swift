@@ -70,18 +70,16 @@ class PhotoLib {
         
         if let data = try? Data(contentsOf: url) {
 //            print("##### JSON data is \(data)")
-            let json = JSON(data:data)
+            let json = try? JSON(data:data)
 //            let json = parseJSON(data: data)
 //            print("##### convered JSON data is \(json)")
 
 //            if json["metadata"]["responseInfo"]["status"].intValue == 200 {
-            if json["stat"].stringValue == "ok" {
+            if json!["stat"].stringValue == "ok" {
 
 //                print("##### JSON data is OK : \(json)")
-               results =  parse(json: json)
+                results =  parse(json: json!)
             
-//                return
-                //return will break viewDidLoad
             }
         }
         

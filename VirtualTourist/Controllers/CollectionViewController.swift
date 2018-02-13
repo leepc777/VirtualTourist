@@ -39,7 +39,7 @@ class CollectionViewController: UICollectionViewController {
         activityIndicator.center = view.center
         activityIndicator.hidesWhenStopped = true
         activityIndicator.activityIndicatorViewStyle = .gray
-        view.addSubview(activityIndicator)
+        self.view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
         UIApplication.shared.beginIgnoringInteractionEvents()
 
@@ -96,7 +96,7 @@ class CollectionViewController: UICollectionViewController {
                 activityIndicator.center = view.center
                 activityIndicator.hidesWhenStopped = true
                 activityIndicator.activityIndicatorViewStyle = .gray
-                view.addSubview(activityIndicator)
+                self.view.addSubview(activityIndicator)
                 activityIndicator.startAnimating()
                 UIApplication.shared.beginIgnoringInteractionEvents()
         

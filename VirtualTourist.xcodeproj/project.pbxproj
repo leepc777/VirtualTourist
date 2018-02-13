@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2211211C202FE6E1009E5D9C /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2211211B202FE6E1009E5D9C /* DataModel.swift */; };
-		2211211E202FE8CD009E5D9C /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2211211D202FE8CD009E5D9C /* SwiftyJSON.swift */; };
 		22337E91202D1FA7006AD54E /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22337E90202D1FA7006AD54E /* CollectionViewController.swift */; };
 		22337E98202DBDA8006AD54E /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22337E97202DBDA8006AD54E /* CollectionViewCell.swift */; };
 		22532F72202BC42C0035A806 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22532F71202BC42C0035A806 /* AppDelegate.swift */; };
@@ -19,11 +18,11 @@
 		22532F85202BE6150035A806 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 22532F83202BE6150035A806 /* Model.xcdatamodeld */; };
 		22C24094203132F500126B5D /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C24093203132F500126B5D /* GCDBlackBox.swift */; };
 		22C240962031450F00126B5D /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C240952031450F00126B5D /* DetailViewController.swift */; };
+		22F18DBF203267E500EC9B49 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F18DBE203267E500EC9B49 /* SwiftyJSON.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2211211B202FE6E1009E5D9C /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
-		2211211D202FE8CD009E5D9C /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		22337E90202D1FA7006AD54E /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		22337E97202DBDA8006AD54E /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		22532F6E202BC42C0035A806 /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -36,6 +35,7 @@
 		22532F84202BE6150035A806 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		22C24093203132F500126B5D /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
 		22C240952031450F00126B5D /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		22F18DBE203267E500EC9B49 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +56,7 @@
 				22C240952031450F00126B5D /* DetailViewController.swift */,
 				22337E90202D1FA7006AD54E /* CollectionViewController.swift */,
 				22337E97202DBDA8006AD54E /* CollectionViewCell.swift */,
-				2211211D202FE8CD009E5D9C /* SwiftyJSON.swift */,
+				22F18DBE203267E500EC9B49 /* SwiftyJSON.swift */,
 				22C24093203132F500126B5D /* GCDBlackBox.swift */,
 			);
 			path = Controllers;
@@ -179,8 +179,8 @@
 				22337E91202D1FA7006AD54E /* CollectionViewController.swift in Sources */,
 				22532F74202BC42C0035A806 /* ViewController.swift in Sources */,
 				22532F72202BC42C0035A806 /* AppDelegate.swift in Sources */,
+				22F18DBF203267E500EC9B49 /* SwiftyJSON.swift in Sources */,
 				22532F85202BE6150035A806 /* Model.xcdatamodeld in Sources */,
-				2211211E202FE8CD009E5D9C /* SwiftyJSON.swift in Sources */,
 				2211211C202FE6E1009E5D9C /* DataModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
