@@ -1,8 +1,9 @@
 # VirtualTourist
-Drop Pins on a map. Search and download photos from Flickr with **RESTful API**.  Persistently store Pins and Photos with **Core Data**.
+Drop Pins on a map with MapKit. Search and download photos from Flickr with **RESTful API**.  Persistently store Pins and Photos with **Core Data**.
 
 
 ## Main Challenges
+* Use **MapKit** to show pins on a map.
 * Interact with **RESTful** Flickr API
 * Use **Core Data** for local persistence.
 
