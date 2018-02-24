@@ -99,6 +99,26 @@ class CollectionViewController: UICollectionViewController {
         layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
         
         
+        //MARK: Prepare data for collection view.
+        // 1. fetch photos from context to photoArray to show stored Photos
+        fetchPhotos()
+        
+        // 2. get all URLs for this location(selectedPin)
+        urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
+        
+        // 3. filter & pick 15 random URLs to download images to photoArray which is data souce for collection view.
+        //                getImgsFromURLs()
+
+        performUIUpdatesOnMain {
+            print("%%%% Call GCD to sumbit getImgsFromURLs()")
+            self.getImgsFromURLs()
+            self.collectionView?.reloadData()
+            //stop indicator after view appear
+            self.activityIndicator.stopAnimating()
+            UIApplication.shared.endIgnoringInteractionEvents()
+            
+        }
+
         
         print("!!!!! ViewDidLoad compelted, the coordinate of this Pin is \(selectedPin.latitude) and \(selectedPin.longitude) and the stored photos at this location is \(photoArray.count) and total URLs for this locaiton is \(urlArray.count)" )
     }
@@ -112,26 +132,26 @@ class CollectionViewController: UICollectionViewController {
         
         print("$$$$$$$$   viewDidAppear got called  $$$$$$")
         
-                //MARK: Prepare data for collection view.
-                // 1. fetch photos from context to photoArray to show stored Photos
-                fetchPhotos()
+//                //MARK: Prepare data for collection view.
+//                // 1. fetch photos from context to photoArray to show stored Photos
+//                fetchPhotos()
+//
+//                // 2. get all URLs for this location(selectedPin)
+//                urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
+//
+//                // 3. filter & pick 15 random URLs to download images to photoArray which is data souce for collection view.
+////                getImgsFromURLs()
         
-                // 2. get all URLs for this location(selectedPin)
-                urlArray = PhotoLib.getPhotoURLs(lat: selectedPin.latitude, lon: selectedPin.longitude)
         
-                // 3. filter & pick 15 random URLs to download images to photoArray which is data souce for collection view.
-//                getImgsFromURLs()
-        
-        
-        performUIUpdatesOnMain {
-            print("%%%% Call GCD to sumbit getImgsFromURLs()")
-            self.getImgsFromURLs()
-            self.collectionView?.reloadData()
-            //stop indicator after view appear
-            self.activityIndicator.stopAnimating()
-            UIApplication.shared.endIgnoringInteractionEvents()
-
-        }
+//        performUIUpdatesOnMain {
+//            print("%%%% Call GCD to sumbit getImgsFromURLs()")
+//            self.getImgsFromURLs()
+//            self.collectionView?.reloadData()
+//            //stop indicator after view appear
+//            self.activityIndicator.stopAnimating()
+//            UIApplication.shared.endIgnoringInteractionEvents()
+//
+//        }
 
         
         
@@ -156,11 +176,27 @@ class CollectionViewController: UICollectionViewController {
 //        cell.imageView.image = UIImage(named: "finn") //finn is local image
 //        cell.imageView.image = UIImage(data: photoArray[indexPath.row].image!)
 
+//        //set indicator inside cell
+//        cell.activityIndicator.center = view.center
+//        cell.activityIndicator.hidesWhenStopped = true
+//        cell.activityIndicator.activityIndicatorViewStyle = .whiteLarge
+//        self.view.addSubview(activityIndicator)
+//        cell.activityIndicator.startAnimating()
+
         performUIUpdatesOnMain {
+            //set indicator inside cell
+            cell.activityIndicator.center = self.view.center
+            cell.activityIndicator.hidesWhenStopped = true
+            cell.activityIndicator.activityIndicatorViewStyle = .whiteLarge
+            self.view.addSubview(self.activityIndicator)
+            cell.activityIndicator.startAnimating()
+
             cell.imageView.image = UIImage(data: self.photoArray[indexPath.row].image!)
+//            cell.activityIndicator.stopAnimating()
         }
         
-        
+        cell.activityIndicator.stopAnimating()
+
         print("%%%%%%%%%%  cellForItemAt got trigger %%%%%%%%%%%%%% ")
 
         return cell
@@ -251,12 +287,12 @@ class CollectionViewController: UICollectionViewController {
             print("!!!!!!no photos in Context for this Pin, so we can get Flickr photos ")
             
             if urlArrayCount == 0 {
-                showMessage(title: "Flickr doesn't have photos for this location", message: "Pick another Location")
+                Helper.showMessage(title: "Flickr doesn't have photos for this location", message: "Pick another Location", view: self)
                 print("@@@@@@@@@@  can't find any pictures at this Pin")
             } else {
                 
                 // set the max number of photos showing in the collecition view as 15
-                let numberofShowingPhotos = urlArray.count<15 ? urlArray.count:15
+                let numberofShowingPhotos = urlArray.count<24 ? urlArray.count:24
                 print ("@@@@@@@@@   Flickr has \(urlArray.count) pictures for this location")
                 for index in 0 ..< numberofShowingPhotos {
                     let randomIndex = Int(arc4random()) % urlArrayCount
@@ -288,15 +324,6 @@ class CollectionViewController: UICollectionViewController {
 
     }
     
-    //Mark: - SHow message through Alert
-    func showMessage(title:String,message:String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        //Cancel Button
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: { (actionHandler) in
-            alert.dismiss(animated: true, completion: nil)
-        }))
-        present(alert, animated: true, completion: nil)
-    }
 }
 
 

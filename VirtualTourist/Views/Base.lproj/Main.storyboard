@@ -73,14 +73,14 @@
                                     <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="finn" translatesAutoresizingMaskIntoConstraints="NO" id="PGE-5Y-X1P">
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="finn" translatesAutoresizingMaskIntoConstraints="NO" id="PGE-5Y-X1P">
                                             <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                     </subviews>
                                 </view>
                                 <connections>
-                                    <outlet property="imageView" destination="PGE-5Y-X1P" id="oe0-hA-Nws"/>
+                                    <outlet property="imageView" destination="PGE-5Y-X1P" id="FKj-4P-Tbi"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -107,7 +107,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="finn" translatesAutoresizingMaskIntoConstraints="NO" id="QYk-sz-eV8">
+                            <imageView multipleTouchEnabled="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="finn" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QYk-sz-eV8">
                                 <rect key="frame" x="0.0" y="64" width="375" height="559"/>
                             </imageView>
                         </subviews>
@@ -126,7 +126,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SRO-ZJ-CTB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1934" y="117"/>
+            <point key="canvasLocation" x="1929" y="117"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="vt1-3k-P6a">

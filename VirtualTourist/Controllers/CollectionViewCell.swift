@@ -13,4 +13,18 @@ class CollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     
     
+    let activityIndicator = UIActivityIndicatorView()
+
+//    static func activityIndicator() {
+//
+//        func starAnimating() {
+//
+//        }
+//
+//        func stopAnimating() {
+//
+//        }
+//
+//    }
+    
 }
